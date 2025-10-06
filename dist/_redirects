@@ -1,0 +1,9 @@
+# Netlify-style redirects (for compatibility)
+/*    /index.html   200
+
+# AWS CloudFront redirects
+/adminblog    /index.html   200
+/admin/*      /index.html   200
+/blogs/*      /index.html   200
+/services/*   /index.html   200
+/projects/*   /index.html   200

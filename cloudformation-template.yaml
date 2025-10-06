@@ -1,0 +1,230 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Solar Energy Website Infrastructure'
+
+Parameters:
+  DomainName:
+    Type: String
+    Description: Domain name for the website
+    Default: your-domain.com
+
+Resources:
+  # S3 Bucket for hosting
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${DomainName}-website'
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+        RoutingRules:
+          - RoutingRuleCondition:
+              HttpErrorCodeReturnedEquals: '404'
+            RedirectRule:
+              ReplaceKeyWith: 'index.html'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  # Bucket Policy
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub '${WebsiteBucket}/*'
+
+  # CloudFront Distribution
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt WebsiteBucket.RegionalDomainName
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        Enabled: true
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 300
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 300
+        PriceClass: PriceClass_100
+
+  # Lambda Function for OpenSolar Proxy
+  OpenSolarProxyFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: opensolar-proxy
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          const https = require('https');
+          
+          exports.handler = async (event) => {
+              const headers = {
+                  'Access-Control-Allow-Origin': '*',
+                  'Access-Control-Allow-Headers': 'Content-Type',
+                  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+              };
+              
+              if (event.httpMethod === 'OPTIONS') {
+                  return {
+                      statusCode: 200,
+                      headers,
+                      body: ''
+                  };
+              }
+              
+              try {
+                  const formData = JSON.parse(event.body);
+                  
+                  const postData = JSON.stringify({
+                      name: formData.name,
+                      email: formData.email,
+                      phone: formData.phone,
+                      address: formData.address,
+                      systemSize: formData.systemSize,
+                      roofType: formData.roofType,
+                      electricityBill: formData.electricityBill,
+                      message: formData.message
+                  });
+                  
+                  const options = {
+                      hostname: 'api.opensolar.com',
+                      port: 443,
+                      path: '/v1/leads',
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': `Bearer ${process.env.OPENSOLAR_API_KEY}`,
+                          'Content-Length': Buffer.byteLength(postData)
+                      }
+                  };
+                  
+                  const response = await new Promise((resolve, reject) => {
+                      const req = https.request(options, (res) => {
+                          let data = '';
+                          res.on('data', (chunk) => data += chunk);
+                          res.on('end', () => resolve({ statusCode: res.statusCode, data }));
+                      });
+                      
+                      req.on('error', reject);
+                      req.write(postData);
+                      req.end();
+                  });
+                  
+                  return {
+                      statusCode: 200,
+                      headers,
+                      body: JSON.stringify({
+                          success: response.statusCode === 200 || response.statusCode === 201,
+                          message: 'Quote submitted successfully'
+                      })
+                  };
+                  
+              } catch (error) {
+                  return {
+                      statusCode: 500,
+                      headers,
+                      body: JSON.stringify({
+                          success: false,
+                          error: error.message
+                      })
+                  };
+              }
+          };
+      Environment:
+        Variables:
+          OPENSOLAR_API_KEY: !Ref OpenSolarApiKey
+
+  # API Gateway
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: solar-website-api
+      Description: API for Solar Website
+
+  ApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: opensolar-proxy
+
+  ApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ResourceId: !Ref ApiGatewayResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OpenSolarProxyFunction.Arn}/invocations'
+
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiGatewayMethod
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: prod
+
+  # Lambda Permission for API Gateway
+  LambdaApiGatewayPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref OpenSolarProxyFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub '${ApiGateway}/*/*'
+
+  # Parameter for OpenSolar API Key
+  OpenSolarApiKey:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /solar-website/opensolar-api-key
+      Type: SecureString
+      Value: your-opensolar-api-key-here
+      Description: OpenSolar API Key for lead submission
+
+Outputs:
+  WebsiteURL:
+    Description: Website URL
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    
+  ApiGatewayURL:
+    Description: API Gateway URL
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod'
+    
+  S3BucketName:
+    Description: S3 Bucket Name
+    Value: !Ref WebsiteBucket
