@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { initializePerformanceMonitoring, lazyLoadResources, preloadCriticalResources } from './utils/performance';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PageTransition from './components/PageTransition';
@@ -27,11 +29,25 @@ import BlogForm from './pages/BlogForm';
 import QuoteManagement from './pages/QuoteManagement';
 
 function App() {
+  useEffect(() => {
+    // Initialize performance monitoring
+    initializePerformanceMonitoring();
+    
+    // Preload critical resources
+    preloadCriticalResources();
+    
+    // Lazy load non-critical resources after initial render
+    setTimeout(() => {
+      lazyLoadResources();
+    }, 1000);
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
         <div className="min-h-screen">
           <Navbar />
+          <SpeedInsights />
           <Routes>
           <Route path="/" element={
             <PageTransition>
