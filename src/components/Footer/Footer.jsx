@@ -17,16 +17,16 @@ const Footer = () => {
               Leading the renewable energy revolution in India.
             </p>
             <div className="social-links">
-              <a href={companyInfo.socialMedia.facebook} target="_blank" rel="noopener noreferrer">
+              <a href={companyInfo.socialMedia.facebook} target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook">
                 <FaFacebook />
               </a>
-              <a href={companyInfo.socialMedia.twitter} target="_blank" rel="noopener noreferrer">
+              <a href={companyInfo.socialMedia.twitter} target="_blank" rel="noopener noreferrer" aria-label="Follow us on Twitter">
                 <FaTwitter />
               </a>
-              <a href={companyInfo.socialMedia.linkedin} target="_blank" rel="noopener noreferrer">
+              <a href={companyInfo.socialMedia.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Connect with us on LinkedIn">
                 <FaLinkedin />
               </a>
-              <a href={companyInfo.socialMedia.youtube} target="_blank" rel="noopener noreferrer">
+              <a href={companyInfo.socialMedia.youtube} target="_blank" rel="noopener noreferrer" aria-label="Subscribe to our YouTube channel">
                 <FaYoutube />
               </a>
             </div>

@@ -12,6 +12,7 @@ const ProjectCard = ({ project }) => {
           src={project.image} 
           alt={project.title}
           className="project-image"
+          loading="lazy"
         />
         <div className="position-absolute top-0 end-0 m-3">
           <span className="badge bg-secondary fs-6">{project.type}</span>

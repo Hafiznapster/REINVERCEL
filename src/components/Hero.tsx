@@ -116,7 +116,10 @@ const Hero: React.FC = () => {
               src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1744&q=80" 
               alt="Solar Panels Background" 
               className="w-100 h-100"
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'cover', aspectRatio: '1744/1163' }}
+              loading="eager"
+              width="1744"
+              height="1163"
               onError={(e) => {
                 // If even the fallback image fails, show a solid color background
                 e.currentTarget.style.display = 'none';

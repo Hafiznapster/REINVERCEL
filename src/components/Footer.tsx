@@ -14,17 +14,17 @@ const Footer: React.FC = () => {
                 renewable energy.
               </p>
               <div className="d-flex gap-2">
-                <a href="#" className="btn btn-outline-light btn-sm">
-                  <i className="fab fa-facebook-f"></i>
+                <a href="#" className="btn btn-outline-light btn-sm" aria-label="Follow us on Facebook">
+                  <i className="fab fa-facebook-f" aria-hidden="true"></i>
                 </a>
-                <a href="#" className="btn btn-outline-light btn-sm">
-                  <i className="fab fa-twitter"></i>
+                <a href="#" className="btn btn-outline-light btn-sm" aria-label="Follow us on Twitter">
+                  <i className="fab fa-twitter" aria-hidden="true"></i>
                 </a>
-                <a href="#" className="btn btn-outline-light btn-sm">
-                  <i className="fab fa-linkedin-in"></i>
+                <a href="#" className="btn btn-outline-light btn-sm" aria-label="Connect with us on LinkedIn">
+                  <i className="fab fa-linkedin-in" aria-hidden="true"></i>
                 </a>
-                <a href="#" className="btn btn-outline-light btn-sm">
-                  <i className="fab fa-youtube"></i>
+                <a href="#" className="btn btn-outline-light btn-sm" aria-label="Subscribe to our YouTube channel">
+                  <i className="fab fa-youtube" aria-hidden="true"></i>
                 </a>
               </div>
             </div>
@@ -64,8 +64,8 @@ const Footer: React.FC = () => {
                 placeholder="Your Email Address" 
                 required 
               />
-              <button type="submit" className="btn btn-success">
-                <i className="fas fa-paper-plane"></i>
+              <button type="submit" className="btn btn-success" aria-label="Subscribe to newsletter">
+                <i className="fas fa-paper-plane" aria-hidden="true"></i>
               </button>
             </form>
           </div>

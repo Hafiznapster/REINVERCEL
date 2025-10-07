@@ -78,7 +78,8 @@ const WhyChoose: React.FC = () => {
                       className="rounded-circle"
                       width="70" 
                       height="70"
-                      style={{ objectFit: 'cover' }}
+                      loading="lazy"
+                      style={{ objectFit: 'cover', aspectRatio: '1/1' }}
                     />
                   </div>
                   <div>
@@ -98,12 +99,12 @@ const WhyChoose: React.FC = () => {
                   </span>
                   <div className="d-flex gap-2">
                     <a href="https://www.linkedin.com/in/vishnu-menon-rein/" target="_blank" 
-                       className="btn btn-outline-primary btn-sm">
-                      <i className="fab fa-linkedin-in"></i>
+                       className="btn btn-outline-primary btn-sm" aria-label="Connect with Vishnu Menon on LinkedIn">
+                      <i className="fab fa-linkedin-in" aria-hidden="true"></i>
                     </a>
                     <a href="mailto:vishnu.menon@revolutionenergyindia.in" 
-                       className="btn btn-outline-primary btn-sm">
-                      <i className="fas fa-envelope"></i>
+                       className="btn btn-outline-primary btn-sm" aria-label="Email Vishnu Menon">
+                      <i className="fas fa-envelope" aria-hidden="true"></i>
                     </a>
                   </div>
                 </div>

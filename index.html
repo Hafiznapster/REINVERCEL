@@ -35,21 +35,173 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts with font-display: swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Preload critical font files -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
+    
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome - Load asynchronously -->
     <link
-      rel="stylesheet"
+      rel="preload"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      />
+    </noscript>
 
     <title>REIN - Revolution Energy India | Sustainable Energy Solutions</title>
+    
+    <!-- Critical CSS - Inlined for performance -->
+    <style>
+      /* Critical CSS - Above the fold styles */
+      :root {
+        --rein-primary: #336021;
+        --rein-primary-light: #4aab3d;
+        --rein-secondary: #F18723;
+        --rein-text-dark: #272525;
+        --rein-text-light: #666666;
+      }
+
+      /* Critical font loading */
+      @font-face {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+        src: url('https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 500;
+        font-display: swap;
+        src: url('https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url('https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLDz8Z1xlFd2JQEk.woff2') format('woff2');
+      }
+
+      /* Critical body styles */
+      body {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: var(--rein-text-dark);
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Critical navbar styles */
+      .navbar-dark {
+        background-color: rgba(51, 96, 33, 0.95) !important;
+        backdrop-filter: blur(10px);
+      }
+
+      /* Critical hero section styles */
+      .hero-section {
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Critical button styles */
+      .btn-success {
+        background-color: var(--rein-primary);
+        border-color: var(--rein-primary);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      .btn-success:hover {
+        background-color: var(--rein-primary-light);
+        border-color: var(--rein-primary-light);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(51, 96, 33, 0.3);
+      }
+
+      /* Critical mobile styles */
+      @media (max-width: 991.98px) {
+        .mobile-top-bar {
+          display: block !important;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1030;
+        }
+
+        .hero-section {
+          padding-top: 120px !important;
+          padding-bottom: 80px;
+        }
+
+        body {
+          padding-bottom: 70px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .mobile-top-bar,
+        .mobile-bottom-nav {
+          display: none !important;
+        }
+      }
+
+      /* Critical loading states */
+      .loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      /* Critical image styles */
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Critical container styles */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
