@@ -87,3 +87,7 @@ export const initPerformanceOptimizations = () => {
   optimizeImageLoading();
   preloadCriticalResources();
 };
+
+// Alias for App.tsx compatibility
+export const initializePerformanceMonitoring = measurePerformance;
+export const lazyLoadResources = optimizeImageLoading;

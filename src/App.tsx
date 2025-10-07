@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { initializePerformanceMonitoring, lazyLoadResources, preloadCriticalResources } from './utils/performance';
+import { optimizeCSSLoading } from './utils/asyncCSSLoader';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PageTransition from './components/PageTransition';
@@ -35,6 +36,9 @@ function App() {
     
     // Preload critical resources
     preloadCriticalResources();
+    
+    // Optimize CSS loading
+    optimizeCSSLoading();
     
     // Lazy load non-critical resources after initial render
     setTimeout(() => {
