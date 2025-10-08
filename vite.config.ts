@@ -21,7 +21,9 @@ export default defineConfig({
         unsafe_math: true,
         unsafe_proto: true,
         unsafe_regexp: true,
-        unsafe_undefined: true
+        unsafe_undefined: true,
+        dead_code: true, // Remove dead code
+        unused: true // Remove unused variables
       },
       mangle: {
         toplevel: true,
@@ -32,7 +34,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // More aggressive code splitting
+          // More aggressive code splitting for better performance
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {
               return 'react';
@@ -49,6 +51,15 @@ export default defineConfig({
             if (id.includes('lucide-react')) {
               return 'icons';
             }
+            if (id.includes('@emailjs')) {
+              return 'emailjs';
+            }
+            if (id.includes('react-hook-form')) {
+              return 'forms';
+            }
+            if (id.includes('react-quill')) {
+              return 'editor';
+            }
             return 'vendor';
           }
           // Split pages into separate chunks
@@ -59,6 +70,14 @@ export default defineConfig({
           // Split components
           if (id.includes('/components/')) {
             return 'components';
+          }
+          // Split services
+          if (id.includes('/services/')) {
+            return 'services';
+          }
+          // Split utils
+          if (id.includes('/utils/')) {
+            return 'utils';
           }
         },
         assetFileNames: (assetInfo) => {

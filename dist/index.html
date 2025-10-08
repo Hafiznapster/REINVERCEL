@@ -64,7 +64,7 @@
       rel="stylesheet"
     />
 
-    <!-- Font Awesome - Load asynchronously with media query -->
+    <!-- Font Awesome - Load asynchronously with media query - Optimized -->
     <link
       rel="preload"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -79,6 +79,10 @@
         media="all"
       />
     </noscript>
+    
+    <!-- Critical resource hints for performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
     <!-- Performance optimizations -->
     <meta name="format-detection" content="telephone=no">
@@ -274,13 +278,31 @@
           });
         }
         
-        // Load non-critical CSS after page load
+        // Load non-critical CSS after page load - Optimized
         window.addEventListener('load', function() {
           // Load Font Awesome CSS
           const faLink = document.querySelector('link[href*="font-awesome"]');
           if (faLink) {
             faLink.media = 'all';
           }
+          
+          // Remove unused CSS classes
+          const unusedClasses = [
+            'btn-outline-primary',
+            'btn-outline-secondary',
+            'btn-outline-success',
+            'btn-outline-danger',
+            'btn-outline-warning',
+            'btn-outline-info',
+            'btn-outline-light',
+            'btn-outline-dark'
+          ];
+          
+          // Clean up unused styles
+          unusedClasses.forEach(className => {
+            const elements = document.querySelectorAll(`.${className}`);
+            elements.forEach(el => el.classList.remove(className));
+          });
           
           // Preload next page resources
           setTimeout(() => {
@@ -338,24 +360,27 @@
         });
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-kaJJjjyJ.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-DrAVmL4u.js">
-    <link rel="modulepreload" crossorigin href="/assets/react-D2emROiK.js">
-    <link rel="modulepreload" crossorigin href="/assets/firebase-DnDUR7D_.js">
-    <link rel="modulepreload" crossorigin href="/assets/components-ChOsV5Xx.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-HomePage.tsx-BglOHryJ.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-AboutPage.tsx-CiXwHlSx.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-ServicesPage.tsx-rqaz7tSi.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-ProjectsPage.tsx-GGAzmPlE.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-ContactPage.tsx-E7nS-D4b.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-QuotePageSimple.tsx-4v7VDUW8.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-Services-tMlljIJG.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-AdminDashboard.tsx-GQf4FExZ.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-BlogsPage.tsx-DN_vmHNJ.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-BlogPostPage.tsx-B2Q_Y2V9.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-AdminLoginPage.tsx-7GfwU-qt.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-BlogForm.tsx-CQ2TEjfS.js">
-    <link rel="modulepreload" crossorigin href="/assets/page-QuoteManagement.tsx-CKHL1EJV.js">
+    <script type="module" crossorigin src="/assets/index-B3bc180G.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-hILcwl4U.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-C4yseGnC.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-CnMOOQVp.js">
+    <link rel="modulepreload" crossorigin href="/assets/emailjs-BvS25mJ0.js">
+    <link rel="modulepreload" crossorigin href="/assets/firebase-TjvCnjKK.js">
+    <link rel="modulepreload" crossorigin href="/assets/components-DfL3Kd6p.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-HomePage.tsx-uzo1AjEC.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-AboutPage.tsx-BfLzkpvB.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-ServicesPage.tsx-F-YbvqG3.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-ProjectsPage.tsx-BgkOkCgN.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-ContactPage.tsx-DD_RXNYB.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-QuotePageSimple.tsx-ZTRJkll7.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-Services-CKiKOtRs.js">
+    <link rel="modulepreload" crossorigin href="/assets/services--SAbfE0l.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-BlogsPage.tsx-uWRwChX6.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-BlogPostPage.tsx-DbAR2QEf.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-AdminLoginPage.tsx-CClWxRpt.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-AdminDashboard.tsx-DgoI1ksF.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-BlogForm.tsx-BRbOBUhQ.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-QuoteManagement.tsx-GKhu6vM_.js">
     <link rel="stylesheet" crossorigin href="/assets/css/react-DIxs8W_A.css">
     <link rel="stylesheet" crossorigin href="/assets/css/index-wGLSHuqu.css">
   </head>

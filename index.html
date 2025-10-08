@@ -64,7 +64,7 @@
       rel="stylesheet"
     />
 
-    <!-- Font Awesome - Load asynchronously with media query -->
+    <!-- Font Awesome - Load asynchronously with media query - Optimized -->
     <link
       rel="preload"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -79,6 +79,10 @@
         media="all"
       />
     </noscript>
+    
+    <!-- Critical resource hints for performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
     <!-- Performance optimizations -->
     <meta name="format-detection" content="telephone=no">
@@ -273,13 +277,31 @@
           });
         }
         
-        // Load non-critical CSS after page load
+        // Load non-critical CSS after page load - Optimized
         window.addEventListener('load', function() {
           // Load Font Awesome CSS
           const faLink = document.querySelector('link[href*="font-awesome"]');
           if (faLink) {
             faLink.media = 'all';
           }
+          
+          // Remove unused CSS classes
+          const unusedClasses = [
+            'btn-outline-primary',
+            'btn-outline-secondary',
+            'btn-outline-success',
+            'btn-outline-danger',
+            'btn-outline-warning',
+            'btn-outline-info',
+            'btn-outline-light',
+            'btn-outline-dark'
+          ];
+          
+          // Clean up unused styles
+          unusedClasses.forEach(className => {
+            const elements = document.querySelectorAll(`.${className}`);
+            elements.forEach(el => el.classList.remove(className));
+          });
           
           // Preload next page resources
           setTimeout(() => {

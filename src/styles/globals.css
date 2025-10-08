@@ -468,15 +468,15 @@ p {
   z-index: 1030;
 }
 
-/* Body padding for fixed navbar */
+/* Body padding for fixed navbar - Optimized */
 body {
-  padding-top: 60px;
+  padding-top: 50px;
 }
 
 @media (max-width: 991.98px) {
   body {
-    padding-top: 50px;
-    padding-bottom: 60px;
+    padding-top: 40px;
+    padding-bottom: 50px;
   }
   
   .mobile-top-bar,
