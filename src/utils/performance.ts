@@ -101,14 +101,94 @@ export const optimizeLCP = () => {
   }
 };
 
-// Initialize performance optimizations
+// Enhanced performance optimizations
 export const initPerformanceOptimizations = () => {
   measurePerformance();
   optimizeImageLoading();
   preloadCriticalResources();
   optimizeLCP();
+  optimizeResourceHints();
+  optimizeThirdPartyScripts();
+};
+
+// Optimize resource hints for better performance
+export const optimizeResourceHints = () => {
+  // Add resource hints for third-party domains
+  const thirdPartyDomains = [
+    'fonts.googleapis.com',
+    'fonts.gstatic.com',
+    'cdnjs.cloudflare.com',
+    'images.unsplash.com',
+    'www.googletagmanager.com'
+  ];
+
+  thirdPartyDomains.forEach(domain => {
+    const link = document.createElement('link');
+    link.rel = 'dns-prefetch';
+    link.href = `//${domain}`;
+    document.head.appendChild(link);
+  });
+};
+
+// Optimize third-party scripts loading
+export const optimizeThirdPartyScripts = () => {
+  // Defer non-critical scripts
+  const scripts = document.querySelectorAll('script[src]');
+  scripts.forEach(script => {
+    if (!script.hasAttribute('async') && !script.hasAttribute('defer')) {
+      const src = script.getAttribute('src');
+      if (src && !src.includes('main.tsx') && !src.includes('gtag')) {
+        script.setAttribute('defer', '');
+      }
+    }
+  });
+};
+
+// Enhanced lazy loading with better performance
+export const enhancedLazyLoading = () => {
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.classList.add('loaded');
+            imageObserver.unobserve(img);
+          }
+        }
+      });
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.1
+    });
+
+    // Observe all lazy images
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      imageObserver.observe(img);
+    });
+  }
+};
+
+// Optimize CSS loading
+export const optimizeCSSLoading = () => {
+  // Load non-critical CSS asynchronously
+  const nonCriticalCSS = [
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+  ];
+
+  nonCriticalCSS.forEach(href => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = href;
+    link.as = 'style';
+    link.onload = function() {
+      this.rel = 'stylesheet';
+    };
+    document.head.appendChild(link);
+  });
 };
 
 // Alias for App.tsx compatibility
 export const initializePerformanceMonitoring = measurePerformance;
-export const lazyLoadResources = optimizeImageLoading;
+export const lazyLoadResources = enhancedLazyLoading;

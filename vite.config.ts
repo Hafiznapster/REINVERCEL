@@ -13,15 +13,53 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true, // Remove console.log in production
-        drop_debugger: true
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'],
+        passes: 3, // Multiple passes for better compression
+        unsafe: true, // Enable unsafe optimizations
+        unsafe_comps: true,
+        unsafe_math: true,
+        unsafe_proto: true,
+        unsafe_regexp: true,
+        unsafe_undefined: true
+      },
+      mangle: {
+        toplevel: true,
+        safari10: true
       }
     },
     cssCodeSplit: true, // Enable CSS code splitting
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          bootstrap: ['bootstrap']
+        manualChunks: (id) => {
+          // More aggressive code splitting
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react';
+            }
+            if (id.includes('react-router')) {
+              return 'router';
+            }
+            if (id.includes('bootstrap')) {
+              return 'bootstrap';
+            }
+            if (id.includes('firebase')) {
+              return 'firebase';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+            return 'vendor';
+          }
+          // Split pages into separate chunks
+          if (id.includes('/pages/')) {
+            const pageName = id.split('/pages/')[1].split('/')[0];
+            return `page-${pageName}`;
+          }
+          // Split components
+          if (id.includes('/components/')) {
+            return 'components';
+          }
         },
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('.');
@@ -29,11 +67,19 @@ export default defineConfig({
           if (/\.(css)$/.test(assetInfo.name)) {
             return `assets/css/[name]-[hash][extname]`;
           }
+          if (/\.(png|jpe?g|gif|svg|webp|avif)$/.test(assetInfo.name)) {
+            return `assets/images/[name]-[hash][extname]`;
+          }
+          if (/\.(woff2?|eot|ttf|otf)$/.test(assetInfo.name)) {
+            return `assets/fonts/[name]-[hash][extname]`;
+          }
           return `assets/[name]-[hash][extname]`;
         }
       }
     },
-    chunkSizeWarningLimit: 1000 // Increase chunk size warning limit
+    chunkSizeWarningLimit: 500, // Reduce chunk size warning limit
+    target: 'es2015', // Target modern browsers for better optimization
+    reportCompressedSize: false // Disable compressed size reporting for faster builds
   },
   server: {
     host: true, // This enables network access
@@ -41,5 +87,12 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
+    include: ['react', 'react-dom', 'react-router-dom']
   },
+  esbuild: {
+    target: 'es2015',
+    minifyIdentifiers: true,
+    minifySyntax: true,
+    minifyWhitespace: true
+  }
 });

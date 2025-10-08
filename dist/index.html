@@ -35,10 +35,20 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
     <link rel="dns-prefetch" href="//images.unsplash.com" />
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+    
+    <!-- Preconnect to critical third-party origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
     
     <!-- Preload critical resources for LCP optimization -->
-    <link rel="preload" href="/images/logo-02.png" as="image" type="image/png">
-    <link rel="preload" href="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=75&fm=webp" as="image" type="image/webp">
+    <link rel="preload" href="/images/logo-02.webp" as="image" type="image/webp">
+    <link rel="preload" href="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80&fm=webp" as="image" type="image/webp">
+    
+    <!-- Preload critical fonts with highest priority -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Google Fonts with font-display: swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -69,8 +79,25 @@
         media="all"
       />
     </noscript>
+    
+    <!-- Performance optimizations -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#336021">
+    <meta name="msapplication-TileColor" content="#336021">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <title>REIN - Revolution Energy India | Sustainable Energy Solutions</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-346PM9GPGE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-346PM9GPGE');
+    </script>
     
     <!-- Critical CSS - Inlined for performance -->
     <style>
@@ -223,18 +250,114 @@
         document.head.appendChild(link);
       }
       
-      // Load non-critical CSS after page load
-      window.addEventListener('load', function() {
-        // Load Font Awesome CSS
-        const faLink = document.querySelector('link[href*="font-awesome"]');
-        if (faLink) {
-          faLink.media = 'all';
+      // Performance optimizations
+      (function() {
+        // Preload critical resources
+        const criticalResources = [
+          { href: '/images/logo-02.webp', as: 'image', type: 'image/webp' },
+          { href: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80&fm=webp', as: 'image', type: 'image/webp' }
+        ];
+        
+        criticalResources.forEach(resource => {
+          const link = document.createElement('link');
+          link.rel = 'preload';
+          link.href = resource.href;
+          link.as = resource.as;
+          link.type = resource.type;
+          document.head.appendChild(link);
+        });
+        
+        // Optimize font loading
+        if ('fonts' in document) {
+          document.fonts.ready.then(() => {
+            document.documentElement.classList.add('fonts-loaded');
+          });
         }
-      });
+        
+        // Load non-critical CSS after page load
+        window.addEventListener('load', function() {
+          // Load Font Awesome CSS
+          const faLink = document.querySelector('link[href*="font-awesome"]');
+          if (faLink) {
+            faLink.media = 'all';
+          }
+          
+          // Preload next page resources
+          setTimeout(() => {
+            const nextPageResources = [
+              '/images/3d.png',
+              '/images/follain.webp',
+              '/images/install.webp'
+            ];
+            
+            nextPageResources.forEach(src => {
+              const link = document.createElement('link');
+              link.rel = 'prefetch';
+              link.href = src;
+              document.head.appendChild(link);
+            });
+          }, 2000);
+        });
+        
+        // Optimize images with intersection observer
+        if ('IntersectionObserver' in window) {
+          const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                  img.src = img.dataset.src;
+                  img.classList.add('loaded');
+                  imageObserver.unobserve(img);
+                }
+              }
+            });
+          });
+          
+          // Observe all lazy images
+          document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('img[data-src]').forEach(img => {
+              imageObserver.observe(img);
+            });
+          });
+        }
+      })();
     </script>
-    <script type="module" crossorigin src="/assets/index-zuvXS0DH.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-Dx4qQQC8.js">
-    <link rel="stylesheet" crossorigin href="/assets/css/index-BwjqmiVp.css">
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-DN_utqbO.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-DrAVmL4u.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-D2emROiK.js">
+    <link rel="modulepreload" crossorigin href="/assets/firebase-DnDUR7D_.js">
+    <link rel="modulepreload" crossorigin href="/assets/components-C8up8p0n.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-HomePage.tsx-B6wzBVJw.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-AboutPage.tsx-CiXwHlSx.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-ServicesPage.tsx-rqaz7tSi.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-ProjectsPage.tsx-GGAzmPlE.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-ContactPage.tsx-zU36Yn2z.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-QuotePageSimple.tsx-DgXcT7zn.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-Services-tMlljIJG.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-AdminDashboard.tsx-DFunBsXo.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-BlogsPage.tsx-98uNx6sM.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-BlogPostPage.tsx-CbwDPlCS.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-AdminLoginPage.tsx-yP1Xk16V.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-BlogForm.tsx-DBOJesty.js">
+    <link rel="modulepreload" crossorigin href="/assets/page-QuoteManagement.tsx-CKHL1EJV.js">
+    <link rel="stylesheet" crossorigin href="/assets/css/react-DIxs8W_A.css">
+    <link rel="stylesheet" crossorigin href="/assets/css/index-wGLSHuqu.css">
   </head>
   <body>
     <div id="root"></div>
