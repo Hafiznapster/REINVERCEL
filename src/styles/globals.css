@@ -430,3 +430,64 @@ p {
   background: var(--rein-primary-light);
   transform: translateY(-2px);
 }
+
+/* Enhanced Navbar Styles for Vercel */
+.navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  background-color: #336021 !important;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: #F18723 !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Navigation Fixes */
+.mobile-top-bar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+}
+
+.mobile-bottom-nav {
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+}
+
+/* Body padding for fixed navbar */
+body {
+  padding-top: 60px;
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 50px;
+    padding-bottom: 60px;
+  }
+  
+  .mobile-top-bar,
+  .mobile-bottom-nav {
+    display: block !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile-top-bar,
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}

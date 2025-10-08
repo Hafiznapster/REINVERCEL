@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       {/* Desktop Navigation - Optimized */}
-      <nav className="navbar navbar-expand-lg navbar-dark fixed-top d-none d-lg-block" style={{ backgroundColor: '#336021', minHeight: '60px', padding: '8px 0' }}>
+      <nav className="navbar navbar-expand-lg navbar-dark fixed-top d-none d-lg-block" style={{ backgroundColor: '#336021', minHeight: '60px', padding: '8px 0', zIndex: 1030 }}>
         <div className="container">
           <Link className="navbar-brand" to="/" style={{ padding: '0' }}>
             <img src="/images/logo-02.png" alt="REIN Logo" height="32" width="auto" className="d-inline-block align-text-top" loading="eager" />
