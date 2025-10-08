@@ -10,6 +10,8 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false, // Disable source maps for production
     minify: 'terser',
+    target: 'es2015', // Target modern browsers for better performance
+    reportCompressedSize: false, // Disable compressed size reporting for faster builds
     terserOptions: {
       compress: {
         drop_console: true, // Remove console.log in production
@@ -96,9 +98,7 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 500, // Reduce chunk size warning limit
-    target: 'es2015', // Target modern browsers for better optimization
-    reportCompressedSize: false // Disable compressed size reporting for faster builds
+    chunkSizeWarningLimit: 300 // Reduce chunk size warning limit
   },
   server: {
     host: true, // This enables network access
